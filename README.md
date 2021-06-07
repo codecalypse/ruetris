@@ -1,2 +1,2 @@
 # ruetris
-tetris like q-learning enviroment
+tetris like q-learning enviroment developed for my master thesis
