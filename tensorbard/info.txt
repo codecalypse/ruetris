@@ -1,1 +1,1 @@
-folder for the SummaryWriter from tensorbardX
+folder for the SummaryWriter from tensorbardX (see train.py)
