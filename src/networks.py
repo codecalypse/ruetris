@@ -13,18 +13,18 @@ class Policy_DDDQN(nn.Module):
     '''
     Dueling-Double-Deep-Q-Network
     '''
-    def __init__(self, input_dim, n_actions):
+    def __init__(self, input_dim, n_actions, opt):
         super(Policy_DDDQN, self).__init__()
+        s1 = opt.statescale_l1
+        s2 = opt.statescale_l2
 
         #definition online network
-        self.fc_online = nn.Sequential(nn.Linear(input_dim, 126), nn.ReLU(),
-                                 nn.Linear(126, 126), nn.ReLU())
-        self.value_online = nn.Sequential(nn.Linear(126, 32), nn.ReLU(),
-                                          nn.Linear(32, 1))
-        self.adv_online = nn.Sequential(nn.Linear(126, 32), nn.ReLU(),
-                                        nn.Linear(32, n_actions))
+        self.fc_online = nn.Sequential(nn.Linear(input_dim, int(input_dim*s1)), nn.ReLU(),
+                                 nn.Linear(int(input_dim*s1), int(input_dim*s2)), nn.ReLU())
+        self.value_online = nn.Sequential(nn.Linear(int(input_dim*s2), 1))
+        self.adv_online = nn.Sequential(nn.Linear(int(input_dim*s2), n_actions))
 
-        self._create_weights()
+        #self._create_weights()
         
         #creating target network
         self.fc_target = copy.deepcopy(self.fc_online)
@@ -40,12 +40,15 @@ class Policy_DDDQN(nn.Module):
             p.requires_grad = False
 
     def _create_weights(self):
+        ''' Chapter 2.6.1.4 '''
         for m in self.modules():
             if isinstance(m, nn.Linear):
-                nn.init.xavier_uniform_(m.weight)
+                nn.init.kaiming_uniform(m.weight, nonlinearity='relu') #He initialization
+                #nn.init.xavier_uniform_(m.weight)
                 nn.init.constant_(m.bias, 0)
 
-    def forward(self, state, model):
+    def forward(self, state, model='online'):
+        ''' Figure 2.42 '''
         if model == 'online':
             x = self.fc_online(state)
             v = self.value_online(x)
@@ -53,7 +56,7 @@ class Policy_DDDQN(nn.Module):
             adv_avg = torch.mean(adv, dim=1, keepdims=True)
             q = v + adv - adv_avg
 
-        if model == 'target':
+        elif model == 'target':
             x = self.fc_target(state)
             v = self.value_target(x)
             adv = self.adv_target(x)
@@ -63,15 +66,16 @@ class Policy_DDDQN(nn.Module):
         return q
 
 class Policy_QN(nn.Module):
-    def __init__(self, input_dim, output_dim):
+    def __init__(self, input_dim, output_dim, opt):
         #super(Policy_DDQN, self).__init__()
-        super().__init__()   
-        
-        self.online = nn.Sequential(nn.Linear(input_dim, 512), nn.ReLU(),
-                                    nn.Linear(512, 256), nn.ReLU(),
-                                    nn.Linear(256, 128), nn.ReLU(),
-                                    nn.Linear(128, output_dim))
-        
+        super().__init__()
+        s1 = opt.statescale_l1
+        s2 = opt.statescale_l2
+
+        self.online = nn.Sequential(nn.Linear(input_dim, int(input_dim*s1)), nn.ReLU(),
+                                    nn.Linear(int(input_dim*s1), int(input_dim*s2)), nn.ReLU(),
+                                    nn.Linear(int(input_dim*s2), output_dim))
+
         self._create_weights()
         self.target = copy.deepcopy(self.online)
         
@@ -80,31 +84,40 @@ class Policy_QN(nn.Module):
             p.requires_grad = False
             
     def _create_weights(self):
+        '''https://pytorch.org/docs/stable/nn.init.html ''' 
         for m in self.modules():
             if isinstance(m, nn.Linear):
-                nn.init.xavier_uniform_(m.weight)
+                #nn.init.kaiming_uniform_(m.weight,mode='fan_in', nonlinearity='relu') #He initialization
+                nn.init.kaiming_normal_(m.weight,mode='fan_in', nonlinearity='relu')
+                #nn.init.xavier_uniform_(m.weight)
                 nn.init.constant_(m.bias, 0)
 
-    def forward(self, state, model):
+    def forward(self, state, model='online'):
         if model == 'online':
             return self.online(state)
         elif model == 'target':
             return self.target(state)
         
 class Policy_VN(nn.Module):
-    def __init__(self, input_dim, output_dim):
+    ''' Deprecated and not longer used '''
+    def __init__(self, input_dim, output_dim, opt):
         super(Policy_VN, self).__init__()
+        s1 = opt.statescale_l1
+        s2 = opt.statescale_l2
 
-        self.value = nn.Sequential(nn.Linear(input_dim, 512), nn.ReLU(), #nn.ReLU(inplace=True) option for slightly decreased memory usage
-                                   nn.Linear(512, 128), nn.ReLU(),
-                                   nn.Linear(128, output_dim)) 
+        self.value = nn.Sequential(nn.Linear(input_dim, int(input_dim*s1)), nn.ReLU(), #nn.ReLU(inplace=True) option for slightly decreased memory usage
+                                   nn.Linear(int(input_dim*s1), int(input_dim*s2)), nn.ReLU(),
+                                   nn.Linear(int(input_dim*s2), output_dim))
+        # self.value = nn.Sequential(nn.Linear(input_dim, 3), nn.Identity(),
+        #                            nn.Linear(3, output_dim))
 
-        self._create_weights()
+        #self._create_weights()
 
     def _create_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Linear):
-                nn.init.xavier_uniform_(m.weight)
+                nn.init.kaiming_uniform(m.weight, nonlinearity='relu') #He initialization
+                #nn.init.xavier_uniform_(m.weight)
                 nn.init.constant_(m.bias, 0)
 
     def forward(self, state):
