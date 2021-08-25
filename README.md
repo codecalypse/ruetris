@@ -16,7 +16,7 @@ Usage:
 4) Open the train.py file to change hyperparameters: <preferded editor> train.py
 5) You can alos type: python train.py -h for a list of parameters and chagne them from cli instead of editing the file.
 6) Start the script from the cli: python train.py <change some parameters from cli>
-7) To inspect training-graphs use tensorbaordX in another tab (str+t): tensorboard ./tensorboard
+7) To inspect training-graphs use tensorbaordX in another tab: tensorboard ./tensorboard
 
 After the training has started, a train_config.txt and a summary.txt file should have been created in the main-folder.
 After every save intervall a model is saved in the trained_model-folder. With the train_config.txt and the desired filename of the
