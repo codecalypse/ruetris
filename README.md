@@ -11,10 +11,11 @@ bigger as simple functions, so please be indulgent and hold that in mind. Neverl
 
 Usage:
 1) Create the enviroment with the yml-file: conda env create -f env.yml
-2) Activate the enviroment: conda activate python36
-3) cd into the Folder
-4) Open the train.py file to change hyperparameters
-5) Start the script from the cli
+2) Activate the enviroment: conda activate ruetris
+3) cd into the Folder: cd /some/path/ruetris
+4) Open the train.py file to change hyperparameters: <preferded editor> train.py
+5) You can alos type: python train.py -h for a list of parameters and chagne them from cli instead of editing the file.
+6) Start the script from the cli: python train.py <change some parameters from cli>
 
 After the training has started, a train_config.txt and a summary.txt file should have been created in the main-folder.
 After every save intervall a model is saved in the trained_model-folder. With the train_config.txt and the desired filename of the
