@@ -11,7 +11,7 @@ bigger as simple functions, so please be indulgent and hold that in mind. Neverl
 
 Usage:
 1) Create the enviroment with the yml-file: conda env create -f env.yml
-2) Aktivate the enviroment
+2) Activate the enviroment: conda activate python36
 3) cd into the Folder
 4) Open the train.py file to change hyperparameters
 5) Start the script from the cli
