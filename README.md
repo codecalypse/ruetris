@@ -10,7 +10,7 @@ At the end I want to mention, that this was my very first time doing something w
 bigger as simple functions, so please be indulgent and hold that in mind. Neverless I enjoyed the challange.
 
 Usage:
-1) Create the enviroment with the yml-file: conda env create --file=env.yaml
+1) Create the enviroment with the yml-file: conda env create -f env.yml
 2) Aktivate the enviroment
 3) cd into the Folder
 4) Open the train.py file to change hyperparameters
