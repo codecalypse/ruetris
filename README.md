@@ -14,7 +14,7 @@ Usage:
 2) Activate the enviroment: conda activate ruetris
 3) cd into the Folder: cd /some/path/ruetris
 4) Open the train.py file to change hyperparameters: <preferded editor> train.py
-5) You can alos type: python train.py -h for a list of parameters and chagne them from cli instead of editing the file.
+5) You can also type: python train.py -h for a list of parameters and change them from cli instead of editing the file.
 6) Start the script from the cli: python train.py <change some parameters from cli>
 7) To inspect training-graphs use tensorbaordX in another tab: tensorboard ./tensorboard
 
