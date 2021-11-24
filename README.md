@@ -7,7 +7,7 @@ on youtube: https://www.youtube.com/hashtag/mymasterthesis , the result files ar
 The simulation application showed on youtube and in thesis is not in the repository, because it is not my property. Enything else 
 I did in my sparetime and shall be provided under the MIT lizenz to everyone, maybe someone can find it usefull.
 At the end I want to mention, that this was my very first time doing something with neuronal networks and creating something 
-bigger as simple functions, so please be indulgent and hold that in mind. Neverless I enjoyed the challange.
+bigger as simple functions or applications, so please be indulgent and hold that in mind. Neverless I enjoyed the challange.
 
 Usage:
 1) Create the enviroment with the yml-file: conda env create -f env.yml
